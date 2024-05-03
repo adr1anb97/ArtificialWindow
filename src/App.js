@@ -111,7 +111,7 @@ async function init() {
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
 
-  // walls
+  // upperwall
   const planeTop = new THREE.Mesh(
     planeGeo,
     new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture })
@@ -121,6 +121,7 @@ async function init() {
   planeTop.receiveShadow = true;
   scene.add(planeTop);
 
+  // bottomwall
   const planeBottom = new THREE.Mesh(
     planeGeo,
     new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture })
@@ -129,6 +130,7 @@ async function init() {
   planeBottom.receiveShadow = true;
   scene.add(planeBottom);
 
+  // frontwall ???
   const planeFront = new THREE.Mesh(
     planeGeo,
     new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture })
@@ -139,15 +141,17 @@ async function init() {
   planeFront.receiveShadow = true;
   scene.add(planeFront);
 
+  // backwall - image needs to be placed here
   const planeBack = new THREE.Mesh(
     planeGeo,
-    new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture })
+    new THREE.MeshPhongMaterial({ color: 0xfffff, map: texture })
   );
   planeBack.position.z = -50;
   planeBack.position.y = 50;
   planeBack.receiveShadow = true;
   scene.add(planeBack);
 
+  // rightwall
   const planeRight = new THREE.Mesh(
     planeGeo,
     new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture })
@@ -158,6 +162,7 @@ async function init() {
   planeRight.rotateY(-Math.PI / 2);
   scene.add(planeRight);
 
+  // leftwall
   const planeLeft = new THREE.Mesh(
     planeGeo,
     new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture })
@@ -202,7 +207,7 @@ async function init() {
         plant.position.set(0, 0, -40);
       }
 
-      scene.add(plant);
+      // scene.add(plant);
     },
     undefined,
     function (e) {
