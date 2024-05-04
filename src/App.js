@@ -113,9 +113,14 @@ async function init() {
   texture.wrapT = THREE.RepeatWrapping;
 
   // image for backwall
-  const wallImage = new THREE.TextureLoader().load(`${HOST}/water.jpg`);
-  wallImage.wrapS = THREE.RepeatWrapping;
-  wallImage.wrapT = THREE.RepeatWrapping;
+  const backwallImage = new THREE.TextureLoader().load(`${HOST}/whideFieldBackground.jpg`);
+  backwallImage.wrapS = THREE.RepeatWrapping;
+  backwallImage.wrapT = THREE.RepeatWrapping;
+
+  // image for frontwall
+  const frontwallImage = new THREE.TextureLoader().load(`${HOST}/whideFieldForeground.jpg`);
+  frontwallImage.wrapS = THREE.RepeatWrapping;
+  frontwallImage.wrapT = THREE.RepeatWrapping;
 
   // upperwall
   const planeTop = new THREE.Mesh(
@@ -136,21 +141,21 @@ async function init() {
   planeBottom.receiveShadow = true;
   scene.add(planeBottom);
 
-  // frontwall ???
+  // frontwall - add first layer of image here
   const planeFront = new THREE.Mesh(
     planeGeo,
-    new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture })
+    new THREE.MeshPhongMaterial({ color: 0xffffff, map: frontwallImage })
   );
   planeFront.position.z = 50;
   planeFront.position.y = 50;
-  planeFront.rotateY(Math.PI);
+  // planeFront.rotateY(Math.PI);
   planeFront.receiveShadow = true;
   scene.add(planeFront);
 
-  // backwall - image needs to be placed here
+  // backwall - rear image needs to be here
   const imageSurface = new THREE.Mesh(
     planeGeo,
-    new THREE.MeshPhongMaterial({ color: 0xffffff, map: wallImage })
+    new THREE.MeshPhongMaterial({ color: 0xffffff, map: backwallImage })
   );
   imageSurface.position.z = -50;
   imageSurface.position.y = 50;
