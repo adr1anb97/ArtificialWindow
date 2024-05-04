@@ -5,6 +5,7 @@ import { OrbitControls } from "./OrbitControls";
 import "@mediapipe/pose";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import { FBXLoader } from "./utils/FBXLoader";
+import { image } from "@tensorflow/tfjs-core";
 
 /*
 Credit for 3d model: "Palm Plant" (https://skfb.ly/6VsxQ) by SomeKevin is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
@@ -111,6 +112,11 @@ async function init() {
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
 
+  // image for backwall
+  const wallImage = new THREE.TextureLoader().load(`${HOST}/water.jpg`);
+  wallImage.wrapS = THREE.RepeatWrapping;
+  wallImage.wrapT = THREE.RepeatWrapping;
+
   // upperwall
   const planeTop = new THREE.Mesh(
     planeGeo,
@@ -142,14 +148,15 @@ async function init() {
   scene.add(planeFront);
 
   // backwall - image needs to be placed here
-  const planeBack = new THREE.Mesh(
+  const imageSurface = new THREE.Mesh(
     planeGeo,
-    new THREE.MeshPhongMaterial({ color: 0xfffff, map: texture })
+    new THREE.MeshPhongMaterial({ color: 0xffffff, map: wallImage })
   );
-  planeBack.position.z = -50;
-  planeBack.position.y = 50;
-  planeBack.receiveShadow = true;
-  scene.add(planeBack);
+  imageSurface.position.z = -50;
+  imageSurface.position.y = 50;
+  // imageSurface.rotateY(Math.PI);
+  imageSurface.receiveShadow = true;
+  scene.add(imageSurface);
 
   // rightwall
   const planeRight = new THREE.Mesh(
@@ -207,6 +214,7 @@ async function init() {
         plant.position.set(0, 0, -40);
       }
 
+      // dont show tree in the box
       // scene.add(plant);
     },
     undefined,
