@@ -152,7 +152,8 @@ async function init() {
     planeGeo,
     new THREE.MeshPhongMaterial({ color: 0xffffff, map: wallImage })
   );
-  imageSurface.position.z = -50;
+  // changed the Z-Value of the Backwall to get the image closer to the viewer
+  imageSurface.position.z = -20;
   imageSurface.position.y = 50;
   // imageSurface.rotateY(Math.PI);
   imageSurface.receiveShadow = true;
