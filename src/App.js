@@ -118,7 +118,7 @@ async function init() {
   backwallImage.wrapT = THREE.RepeatWrapping;
 
   // image for frontwall
-  const frontwallImage = new THREE.TextureLoader().load(`${HOST}/whideFieldForeground.jpg`);
+  const frontwallImage = new THREE.TextureLoader().load(`${HOST}/whideFieldForegroundTransparentBG.png`);
   frontwallImage.wrapS = THREE.RepeatWrapping;
   frontwallImage.wrapT = THREE.RepeatWrapping;
 
@@ -144,10 +144,10 @@ async function init() {
   // frontwall - add first layer of image here
   const planeFront = new THREE.Mesh(
     planeGeo,
-    new THREE.MeshPhongMaterial({ color: 0xffffff, map: frontwallImage })
+    new THREE.MeshPhongMaterial({map: frontwallImage, transparent: true, alphaTest: 0.5}) // options needed to allow transparency of the cut parts on the foreground
   );
-  planeFront.position.z = 50;
-  planeFront.position.y = 50;
+  planeFront.position.z = -15;
+  planeFront.position.y = 53;
   // planeFront.rotateY(Math.PI);
   planeFront.receiveShadow = true;
   scene.add(planeFront);
@@ -157,7 +157,7 @@ async function init() {
     planeGeo,
     new THREE.MeshPhongMaterial({ color: 0xffffff, map: backwallImage })
   );
-  imageSurface.position.z = -50;
+  imageSurface.position.z = -20;
   imageSurface.position.y = 50;
   // imageSurface.rotateY(Math.PI);
   imageSurface.receiveShadow = true;
