@@ -530,29 +530,30 @@ class OrbitControls extends EventDispatcher {
       scope.update();
     };
 
+    // set face movements here
     this.handleFaceMoveRotate = function (faceX, leftEyeYPosition) {
       let touchscreen = "ontouchstart" in window ? true : false;
       let scaledXCoordinate, scaledYCoordinate;
 
-      if (touchscreen) {
+      // if (touchscreen) {
+      //   scaledXCoordinate = scaleValue(
+      //     faceX,
+      //     [0, window.innerWidth],
+      //     [-150, 100]
+      //   );
+      // } else {
         scaledXCoordinate = scaleValue(
           faceX,
           [0, window.innerWidth],
-          [-150, 100]
+          [85, -85] // swapped the presigns of these two values to invert the movement of the view
         );
-      } else {
-        scaledXCoordinate = scaleValue(
-          faceX,
-          [0, window.innerWidth],
-          [-85, 85]
-        );
-      }
+      // }
 
-      if (touchscreen) {
-        scaledYCoordinate = scaleValue(leftEyeYPosition, [0, 480], [-100, 85]);
-      } else {
+      // if (touchscreen) {
+      //   scaledYCoordinate = scaleValue(leftEyeYPosition, [0, 480], [-100, 85]);
+      // } else {
         scaledYCoordinate = scaleValue(leftEyeYPosition, [0, 480], [-85, 85]);
-      }
+      // }
 
       rotateEnd.set(-scaledXCoordinate, -scaledYCoordinate);
       // rotateEnd.set(-scaledXCoordinate, 0);
