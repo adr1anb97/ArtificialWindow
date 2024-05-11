@@ -500,34 +500,55 @@ class OrbitControls extends EventDispatcher {
 
     // function handleMouseMoveRotate(event) {
     this.handleMouseMoveRotate = function (event) {
-      let scaledXCoordinate = scaleValue(
-        event.clientX,
-        [0, window.innerWidth],
-        [-80, 80]
-      );
+      // console.log("MOUSE MOVED");
+      // let scaledXCoordinate = scaleValue(
+      //   event.clientX,
+      //   [0, window.innerWidth],
+      //   [-80, 80]
+      // );
 
-      let scaledYCoordinate = scaleValue(
-        event.clientY,
-        [0, window.innerHeight],
-        [-85, 85]
-      );
+      // let scaledYCoordinate = scaleValue(
+      //   event.clientY,
+      //   [0, window.innerHeight],
+      //   [-85, 85]
+      // );
 
-      rotateEnd.set(scaledXCoordinate, scaledYCoordinate);
-      // rotateEnd.set(event.clientX / 30, event.clientY / 30);
+      // rotateEnd.set(scaledXCoordinate, scaledYCoordinate);
+      // // rotateEnd.set(event.clientX / 30, event.clientY / 30);
 
-      rotateDelta
-        .subVectors(rotateEnd, rotateStart)
-        .multiplyScalar(scope.rotateSpeed);
+      // rotateDelta
+      //   .subVectors(rotateEnd, rotateStart)
+      //   .multiplyScalar(scope.rotateSpeed);
 
-      const element = scope.domElement;
+      // const element = scope.domElement;
 
-      rotateLeft((2 * Math.PI * rotateDelta.x) / element.clientHeight); // yes, height
+      // rotateLeft((2 * Math.PI * rotateDelta.x) / element.clientHeight); // yes, height
 
-      rotateUp((2 * Math.PI * rotateDelta.y) / element.clientHeight);
+      // rotateUp((2 * Math.PI * rotateDelta.y) / element.clientHeight);
 
-      rotateStart.copy(rotateEnd);
+      // rotateStart.copy(rotateEnd);
 
-      scope.update();
+      // scope.update();
+    };
+
+    this.handleKeyboardInput = function(event) {
+      if(event.key === "1") {
+        console.log("1 PRESSED");
+      } else if(event.key === "2") {
+        console.log("2 PRESSED");
+      } else if(event.key === "3") {
+        console.log("3 PRESSED");
+      } else if(event.key === "4") {
+        console.log("4 PRESSED");
+      } else if(event.key === "5") {
+        console.log("5 PRESSED");
+      } else if(event.key === "6") {
+        console.log("6 PRESSED");
+      } else if(event.key === "7") {
+        console.log("7 PRESSED");
+      } else if(event.key === "8") {
+        console.log("8 PRESSED");
+      }
     };
 
     // set face movements here

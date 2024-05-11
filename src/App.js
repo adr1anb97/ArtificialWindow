@@ -75,7 +75,7 @@ async function init() {
   // camera
   const planeGeo = new THREE.PlaneGeometry(100.1, 100.1);
 
-  camera = new THREE.PerspectiveCamera(
+  camera = new THREE.PerspectiveCamera(                        
     45,
     window.innerWidth / window.innerHeight,
     1,
@@ -185,49 +185,6 @@ async function init() {
   planeLeft.rotateY(Math.PI / 2);
   scene.add(planeLeft);
 
-  /* 3D model */
-  const loader = new FBXLoader();
-  loader.load(
-    `${HOST}/palm-plant/source/Pflanze.fbx`,
-    function (object) {
-      plant = object;
-      plant.traverse(function (child) {
-        if (child.isMesh) {
-          child.castShadow = true;
-          child.receiveShadow = false;
-
-          const texture = new THREE.TextureLoader().load(
-            `${HOST}/palm-plant/textures/Pflanze_Albedo.png`
-          );
-
-          child.material.map = texture;
-          child.material.needsUpdate = true;
-        }
-      });
-
-      plant.castShadow = true;
-      plant.receiveShadow = false;
-      if (touchscreen) {
-        plant.scale.set(0.4, 0.4, 0.35);
-      } else {
-        plant.scale.set(0.22, 0.35, 0.22);
-      }
-
-      if (touchscreen) {
-        plant.position.set(0, 0, -30);
-      } else {
-        plant.position.set(0, 0, -40);
-      }
-
-      // dont show tree in the box
-      // scene.add(plant);
-    },
-    undefined,
-    function (e) {
-      console.error(e);
-    }
-  );
-
   // lights
   const mainLight = new THREE.PointLight(0xffffff, 1, 250);
   mainLight.position.y = 50;
@@ -262,11 +219,18 @@ async function init() {
 
   window.addEventListener("resize", onWindowResize);
   document.addEventListener("mousemove", onDocumentMouseMove, false);
+
+  // add listeners for keyboard input
+  document.addEventListener("keypress", onKeyboardInput, false);
 }
 
 function onDocumentMouseMove(event) {
   // Manually fire the event in OrbitControls
   cameraControls.handleMouseMoveRotate(event);
+}
+
+function onKeyboardInput(event) {
+  cameraControls.handleKeyboardInput(event);
 }
 
 function onWindowResize() {
