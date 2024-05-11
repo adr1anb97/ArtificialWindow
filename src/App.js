@@ -24,6 +24,25 @@ let detector;
 let plant;
 let defaultVideoWidth = 640;
 
+let planeGeo;
+let texture;
+let backwallImageField;
+let frontwallImageField;
+let planeTop;
+let planeBottom;
+let planeFront;
+let backImageSurface;
+let planeRight;
+let mainLight;
+let planeLeft;
+let color;
+let intensity;
+let directionalLight;
+let Dlight;
+let light;
+let container;
+
+
 /* Detect if device is a touch screen or not */
 let touchscreen = "ontouchstart" in window ? true : false;
 
@@ -59,7 +78,7 @@ const setup = async () => {
 };
 
 async function init() {
-  const container = document.getElementById("container");
+  container = document.getElementById("container");
 
   // renderer
   renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -73,7 +92,7 @@ async function init() {
   scene = new THREE.Scene();
 
   // camera
-  const planeGeo = new THREE.PlaneGeometry(100.1, 100.1);
+  planeGeo = new THREE.PlaneGeometry(100.1, 100.1);
 
   camera = new THREE.PerspectiveCamera(                        
     45,
@@ -106,24 +125,24 @@ async function init() {
   }
 
   // texture for frame
-  const texture = new THREE.TextureLoader().load(
+  texture = new THREE.TextureLoader().load(
     `${HOST}/white-wall-texture.jpeg`
   );
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
 
   // image for backwall
-  const backwallImage = new THREE.TextureLoader().load(`${HOST}/whideFieldBackground.jpg`);
-  backwallImage.wrapS = THREE.RepeatWrapping;
-  backwallImage.wrapT = THREE.RepeatWrapping;
+  backwallImageField = new THREE.TextureLoader().load(`${HOST}/whideFieldBackground.jpg`);
+  backwallImageField.wrapS = THREE.RepeatWrapping;
+  backwallImageField.wrapT = THREE.RepeatWrapping;
 
   // image for frontwall
-  const frontwallImage = new THREE.TextureLoader().load(`${HOST}/whideFieldForegroundTransparentBG.png`);
-  frontwallImage.wrapS = THREE.RepeatWrapping;
-  frontwallImage.wrapT = THREE.RepeatWrapping;
+  frontwallImageField = new THREE.TextureLoader().load(`${HOST}/whideFieldForegroundTransparentBG.png`);
+  frontwallImageField.wrapS = THREE.RepeatWrapping;
+  frontwallImageField.dwrapT = THREE.RepeatWrapping;
 
   // upperwall
-  const planeTop = new THREE.Mesh(
+  planeTop = new THREE.Mesh(
     planeGeo,
     new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture })
   );
@@ -133,7 +152,7 @@ async function init() {
   scene.add(planeTop);
 
   // bottomwall
-  const planeBottom = new THREE.Mesh(
+  planeBottom = new THREE.Mesh(
     planeGeo,
     new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture })
   );
@@ -142,9 +161,9 @@ async function init() {
   scene.add(planeBottom);
 
   // frontwall - add first layer of image here
-  const planeFront = new THREE.Mesh(
+  planeFront = new THREE.Mesh(
     planeGeo,
-    new THREE.MeshPhongMaterial({map: frontwallImage, transparent: true, alphaTest: 0.5}) // options needed to allow transparency of the cut parts on the foreground
+    new THREE.MeshPhongMaterial({map: frontwallImageField, transparent: true, alphaTest: 0.5}) // options needed to allow transparency of the cut parts on the foreground
   );
   planeFront.position.z = -15;
   planeFront.position.y = 53;
@@ -153,18 +172,18 @@ async function init() {
   scene.add(planeFront);
 
   // backwall - rear image needs to be here
-  const imageSurface = new THREE.Mesh(
+  backImageSurface = new THREE.Mesh(
     planeGeo,
-    new THREE.MeshPhongMaterial({ color: 0xffffff, map: backwallImage })
+    new THREE.MeshPhongMaterial({ color: 0xffffff, map: backwallImageField })
   );
-  imageSurface.position.z = -20;
-  imageSurface.position.y = 50;
+  backImageSurface.position.z = -20;
+  backImageSurface.position.y = 50;
   // imageSurface.rotateY(Math.PI);
-  imageSurface.receiveShadow = true;
-  scene.add(imageSurface);
+  backImageSurface.receiveShadow = true;
+  scene.add(backImageSurface);
 
   // rightwall
-  const planeRight = new THREE.Mesh(
+  planeRight = new THREE.Mesh(
     planeGeo,
     new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture })
   );
@@ -175,7 +194,7 @@ async function init() {
   scene.add(planeRight);
 
   // leftwall
-  const planeLeft = new THREE.Mesh(
+  planeLeft = new THREE.Mesh(
     planeGeo,
     new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture })
   );
@@ -186,16 +205,16 @@ async function init() {
   scene.add(planeLeft);
 
   // lights
-  const mainLight = new THREE.PointLight(0xffffff, 1, 250);
+  mainLight = new THREE.PointLight(0xffffff, 1, 250);
   mainLight.position.y = 50;
   mainLight.position.z = 10;
   // scene.add(mainLight);
 
-  const color = 0xffffff;
+  color = 0xffffff;
   // const color = 0xdfebff;
   // const intensity = 1;
-  const intensity = 1;
-  const directionalLight = new THREE.DirectionalLight(color, intensity);
+  intensity = 1;
+  directionalLight = new THREE.DirectionalLight(color, intensity);
   directionalLight.position.set(0, 60, 0);
   // directionalLight.position.set(100, 100, 50);
   directionalLight.castShadow = true;
@@ -203,7 +222,7 @@ async function init() {
   // scene.add(directionalLight);
   // scene.add(directionalLight.target);
 
-  const Dlight = new THREE.DirectionalLight(0x404040, 1);
+  Dlight = new THREE.DirectionalLight(0x404040, 1);
   Dlight.position.set(100, 120, 300);
   Dlight.castShadow = true;
   Dlight.shadow.camera.top = 200;
@@ -213,7 +232,7 @@ async function init() {
   Dlight.shadow.mapSize.set(4096, 4096);
   scene.add(Dlight);
 
-  const light = new THREE.AmbientLight(0xffffff, 0.8); // soft white light
+  light = new THREE.AmbientLight(0xffffff, 0.8); // soft white light
   light.position.set(0, 0, 300);
   scene.add(light);
 
