@@ -531,26 +531,6 @@ class OrbitControls extends EventDispatcher {
       // scope.update();
     };
 
-    this.handleKeyboardInput = function(event) {
-      if(event.key === "1") {
-        console.log("1 PRESSED");
-      } else if(event.key === "2") {
-        console.log("2 PRESSED");
-      } else if(event.key === "3") {
-        console.log("3 PRESSED");
-      } else if(event.key === "4") {
-        console.log("4 PRESSED");
-      } else if(event.key === "5") {
-        console.log("5 PRESSED");
-      } else if(event.key === "6") {
-        console.log("6 PRESSED");
-      } else if(event.key === "7") {
-        console.log("7 PRESSED");
-      } else if(event.key === "8") {
-        console.log("8 PRESSED");
-      }
-    };
-
     // set face movements here
     this.handleFaceMoveRotate = function (faceX, leftEyeYPosition) {
       let touchscreen = "ontouchstart" in window ? true : false;

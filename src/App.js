@@ -224,13 +224,38 @@ async function init() {
   document.addEventListener("keypress", onKeyboardInput, false);
 }
 
+function changeSetup(setup) {
+  console.log("SETUP ", setup, " SELECTED");
+}
+
 function onDocumentMouseMove(event) {
   // Manually fire the event in OrbitControls
   cameraControls.handleMouseMoveRotate(event);
 }
 
 function onKeyboardInput(event) {
-  cameraControls.handleKeyboardInput(event);
+  handleKeyboardInput(event);
+}
+
+// define what should be done when keys 1 - 8 are pressed. handler for face movement in orbitControls (handleFaceMoveRotate())
+function handleKeyboardInput(event) {
+  if(event.key === "1") {
+    console.log("1 PRESSED");
+  } else if(event.key === "2") {
+    console.log("2 PRESSED");
+  } else if(event.key === "3") {
+    console.log("3 PRESSED");
+  } else if(event.key === "4") {
+    console.log("4 PRESSED");
+  } else if(event.key === "5") {
+    console.log("5 PRESSED");
+  } else if(event.key === "6") {
+    console.log("6 PRESSED");
+  } else if(event.key === "7") {
+    console.log("7 PRESSED");
+  } else if(event.key === "8") {
+    console.log("8 PRESSED");
+  }
 }
 
 function onWindowResize() {
