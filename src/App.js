@@ -30,7 +30,7 @@ let backwallImageField;
 let frontwallImageField;
 let planeTop;
 let planeBottom;
-let planeFront;
+let frontImageSurface;
 let backImageSurface;
 let planeRight;
 let mainLight;
@@ -41,6 +41,12 @@ let directionalLight;
 let Dlight;
 let light;
 let container;
+let singleImageField;
+let singleImageMountain;
+let transparentImage;
+
+let frontImageSurfaceMaterial;
+let backImageSurfaceMaterial;
 
 
 /* Detect if device is a touch screen or not */
@@ -124,6 +130,8 @@ async function init() {
     topLeftCorner.set(-50.0, 100.0, -30.0);
   }
 
+
+
   // texture for frame
   texture = new THREE.TextureLoader().load(
     `${HOST}/white-wall-texture.jpeg`
@@ -131,15 +139,42 @@ async function init() {
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
 
-  // image for backwall
+  // field single
+  singleImageField = new THREE.TextureLoader().load(`${HOST}/whideField.jpeg`);
+  singleImageField.wrapS = THREE.RepeatWrapping;
+  singleImageField.wrapT = THREE.RepeatWrapping;
+
+  // mountain single
+  singleImageMountain = new THREE.TextureLoader().load(`${HOST}/mountains.jpg`);
+  singleImageMountain.wrapS = THREE.RepeatWrapping;
+  singleImageMountain.wrapT = THREE.RepeatWrapping;
+
+  // backwall field split background
   backwallImageField = new THREE.TextureLoader().load(`${HOST}/whideFieldBackground.jpg`);
   backwallImageField.wrapS = THREE.RepeatWrapping;
   backwallImageField.wrapT = THREE.RepeatWrapping;
 
-  // image for frontwall
+  // frontwall field split foregrounds
   frontwallImageField = new THREE.TextureLoader().load(`${HOST}/whideFieldForegroundTransparentBG.png`);
   frontwallImageField.wrapS = THREE.RepeatWrapping;
   frontwallImageField.dwrapT = THREE.RepeatWrapping;
+
+
+  // backwall mountain split background
+
+
+  // frontwall mountain split foreground
+
+
+  // middlelayer mountain split
+
+
+  // transparent image
+  transparentImage = new THREE.TextureLoader().load(`${HOST}/transparent.png`);
+  transparentImage.wrapS = THREE.RepeatWrapping;
+  transparentImage.dwrapT = THREE.RepeatWrapping;
+
+
 
   // upperwall
   planeTop = new THREE.Mesh(
@@ -160,27 +195,36 @@ async function init() {
   planeBottom.receiveShadow = true;
   scene.add(planeBottom);
 
-  // frontwall - add first layer of image here
-  planeFront = new THREE.Mesh(
-    planeGeo,
-    new THREE.MeshPhongMaterial({map: frontwallImageField, transparent: true, alphaTest: 0.5}) // options needed to allow transparency of the cut parts on the foreground
-  );
-  planeFront.position.z = -15;
-  planeFront.position.y = 53;
-  // planeFront.rotateY(Math.PI);
-  planeFront.receiveShadow = true;
-  scene.add(planeFront);
 
-  // backwall - rear image needs to be here
+
+
+
+  // frontwall - frontlayer of split image comes here
+  frontImageSurface = new THREE.Mesh(
+    planeGeo,
+    frontImageSurfaceMaterial = new THREE.MeshPhongMaterial({map: frontwallImageField, transparent: true, alphaTest: 0.5}) // options needed to allow transparency of the cut parts on the foreground
+  );
+  frontImageSurface.position.z = -15;
+  frontImageSurface.position.y = 53;
+  // frontImageSurface.rotateY(Math.PI);
+  frontImageSurface.receiveShadow = true;
+  scene.add(frontImageSurface);
+
+  // backwall - backlayer of split image or single image comes here
   backImageSurface = new THREE.Mesh(
     planeGeo,
-    new THREE.MeshPhongMaterial({ color: 0xffffff, map: backwallImageField })
+    backImageSurfaceMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, map: backwallImageField })
   );
   backImageSurface.position.z = -20;
   backImageSurface.position.y = 50;
-  // imageSurface.rotateY(Math.PI);
+  // backImageSurface.rotateY(Math.PI);
   backImageSurface.receiveShadow = true;
   scene.add(backImageSurface);
+
+
+
+
+
 
   // rightwall
   planeRight = new THREE.Mesh(
@@ -247,6 +291,25 @@ function changeSetup(setup) {
   console.log("SETUP ", setup, " SELECTED");
 }
 
+function setScene(newSetup, /*prevSetup*/) {
+  // clearSurfaces(prevSetup);
+  if(newSetup === "fieldSingle") {
+    frontImageSurfaceMaterial.map = transparentImage;
+    backImageSurfaceMaterial.map = singleImageField;
+    // backImageSurface.position.z = -20;
+
+  } else if(newSetup === "fieldMultiple") {
+    // set fieldMultiple
+  } else if(newSetup === "mountainsSingle") {
+    frontImageSurfaceMaterial.map = transparentImage;
+    backImageSurfaceMaterial.map = singleImageMountain;
+    // backImageSurface.position.z = -20;
+
+  } else if(newSetup === "mountainsMultiple") {
+    // set mountainsMultiple
+  }
+}
+
 function onDocumentMouseMove(event) {
   // Manually fire the event in OrbitControls
   cameraControls.handleMouseMoveRotate(event);
@@ -260,6 +323,7 @@ function onKeyboardInput(event) {
 function handleKeyboardInput(event) {
   if(event.key === "1") {
     console.log("1 PRESSED");
+    // setScene("fieldSingle");
   } else if(event.key === "2") {
     console.log("2 PRESSED");
   } else if(event.key === "3") {
@@ -274,6 +338,19 @@ function handleKeyboardInput(event) {
     console.log("7 PRESSED");
   } else if(event.key === "8") {
     console.log("8 PRESSED");
+  }
+}
+
+// clearing the walls for changing the setup
+function clearSurfaces(prevSetup) {
+  if(prevSetup === "fieldSingle") {
+    // remove fieldSingle
+  } else if(prevSetup === "fieldMultiple") {
+    // remove fieldMultiple
+  } else if(prevSetup === "mountainsSingle") {
+    // remove mountainsSingle
+  } else if(prevSetup === "mountainsMultiple") {
+    // remove mountainsMultiple
   }
 }
 
