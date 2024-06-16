@@ -5,7 +5,7 @@ import { OrbitControls } from "./OrbitControls";
 import "@mediapipe/pose";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import { FBXLoader } from "./utils/FBXLoader";
-import { image } from "@tensorflow/tfjs-core";
+import { eye, image } from "@tensorflow/tfjs-core";
 
 /*
 Credit for 3d model: "Palm Plant" (https://skfb.ly/6VsxQ) by SomeKevin is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
@@ -47,6 +47,14 @@ let transparentImage;
 
 let frontImageSurfaceMaterial;
 let backImageSurfaceMaterial;
+
+let eyeDistance;
+let previousEyeDistance;
+
+let positionFrontwall = -15;
+let positionBackwall = -20;
+
+let zoomAllowed = false;
 
 
 /* Detect if device is a touch screen or not */
@@ -204,7 +212,7 @@ async function init() {
     planeGeo,
     frontImageSurfaceMaterial = new THREE.MeshPhongMaterial({map: frontwallImageField, transparent: true, alphaTest: 0.5}) // options needed to allow transparency of the cut parts on the foreground
   );
-  frontImageSurface.position.z = -15;
+  frontImageSurface.position.z = positionFrontwall // -15;
   frontImageSurface.position.y = 53;
   // frontImageSurface.rotateY(Math.PI);
   frontImageSurface.receiveShadow = true;
@@ -215,7 +223,7 @@ async function init() {
     planeGeo,
     backImageSurfaceMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, map: backwallImageField })
   );
-  backImageSurface.position.z = -20;
+  backImageSurface.position.z = positionBackwall // -20;
   backImageSurface.position.y = 50;
   // backImageSurface.rotateY(Math.PI);
   backImageSurface.receiveShadow = true;
@@ -355,6 +363,16 @@ function handleKeyboardInput(event) {
   //   console.log("7 PRESSED");
   // } else if(event.key === "8") {
   //   console.log("8 PRESSED");
+  } else if(event.key === "0") {
+    console.log("RESET ZOOM");
+    positionFrontwall = -15;
+    positionBackwall = -20;
+  } else if(event.key === "z") {
+    console.log("ZOOM ON");
+    zoomAllowed = true;
+  } else if(event.key === "n") {
+    console.log("ZOOM OFF");
+    zoomAllowed = false;
   }
 }
 
@@ -415,13 +433,38 @@ function getFaceCoordinates(poses) {
     );
 
     const leftEyePosition = window.innerWidth - scaledLeftEyeXCoordinate;
-    // const rightEyePosition = window.innerWidth - scaledRightEyeXCoordinate;
+    const rightEyePosition = window.innerWidth - scaledRightEyeXCoordinate;
     const leftEyeYPosition = leftEye.y;
 
-    // const middleEyes = leftEyePosition - rightEyePosition / 2;
+    const middleEyes = leftEyePosition - rightEyePosition / 2;
+
+    eyeDistance = rightEyePosition - leftEyePosition;
 
     // onFaceMove(middleEyes, leftEyeYPosition);
     onFaceMove(leftEyePosition, leftEyeYPosition);
+
+    // console.log("LEFT EYE: ", leftEyePosition);
+    // console.log("RIGHT EYE: ", rightEyePosition);
+    // console.log("EYE DISTANCE: ", eyeDistance);
+
+    if((previousEyeDistance != null) && zoomAllowed) {
+      if((previousEyeDistance + 0) < eyeDistance) {
+        previousEyeDistance = eyeDistance;
+        // zoom in
+        console.log("ZOOM IN", previousEyeDistance);
+        positionFrontwall += 0.5;
+        positionBackwall += 0.5;
+      } else if((previousEyeDistance - 0) > eyeDistance) {
+        previousEyeDistance = eyeDistance;
+        // zoom out
+        console.log("ZOOM OUT", previousEyeDistance);
+        positionFrontwall -= 0.5;
+        positionBackwall -= 0.5;
+      }
+    } else {
+      previousEyeDistance = eyeDistance;
+    }
+    
   }
 }
 
@@ -430,6 +473,9 @@ async function animate() {
 
   const poses = await detector?.estimatePoses(video);
   getFaceCoordinates(poses);
+
+  frontImageSurface.position.z = positionFrontwall;
+  backImageSurface.position.z = positionBackwall;
 
   // set the projection matrix to encompass the portal's frame
   CameraUtils.frameCorners(
@@ -440,6 +486,7 @@ async function animate() {
     false
   );
 
+  // cameraControls.update();
   renderer.render(scene, camera);
 }
 
