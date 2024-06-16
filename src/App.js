@@ -121,6 +121,8 @@ async function init() {
   cameraControls.target.set(0, 40, 0);
   cameraControls.maxDistance = 400;
   cameraControls.minDistance = 10;
+  cameraControls.enableDamping = true;
+  cameraControls.dampingFactor = 0.1;
   cameraControls.dispose();
   cameraControls.update();
 
