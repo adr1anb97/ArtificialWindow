@@ -299,7 +299,8 @@ function setScene(newSetup, /*prevSetup*/) {
     // backImageSurface.position.z = -20;
 
   } else if(newSetup === "fieldMultiple") {
-    // set fieldMultiple
+    frontImageSurfaceMaterial.map = frontwallImageField;
+    backImageSurfaceMaterial.map = backwallImageField;
   } else if(newSetup === "mountainsSingle") {
     frontImageSurfaceMaterial.map = transparentImage;
     backImageSurfaceMaterial.map = singleImageMountain;
@@ -319,25 +320,41 @@ function onKeyboardInput(event) {
   handleKeyboardInput(event);
 }
 
+// controll how sensitive the camera reacts in two steps
+function setSensitivity(sensitivity) {
+  if(sensitivity === "soft") {
+    // set small motions for camera
+  } else if(sensitivity === "hard") {
+    // set large motions for camera
+  }
+}
+
 // define what should be done when keys 1 - 8 are pressed. handler for face movement in orbitControls (handleFaceMoveRotate())
 function handleKeyboardInput(event) {
   if(event.key === "1") {
-    console.log("1 PRESSED");
-    // setScene("fieldSingle");
+    console.log("fieldSingle - soft");
+    setScene("fieldSingle");
+    setSensitivity("soft");
   } else if(event.key === "2") {
-    console.log("2 PRESSED");
+    console.log("fieldMultiple - soft");
+    setScene("fieldMultiple");
+    setSensitivity("soft");
   } else if(event.key === "3") {
-    console.log("3 PRESSED");
+    console.log("field single - hard");
+    setScene("fieldSingle");
+    setSensitivity("hard");
   } else if(event.key === "4") {
-    console.log("4 PRESSED");
-  } else if(event.key === "5") {
-    console.log("5 PRESSED");
-  } else if(event.key === "6") {
-    console.log("6 PRESSED");
-  } else if(event.key === "7") {
-    console.log("7 PRESSED");
-  } else if(event.key === "8") {
-    console.log("8 PRESSED");
+    console.log("field multiple - hard");
+    setScene("fieldMultiple");
+    setSensitivity("hard");
+  // } else if(event.key === "5") {
+  //   console.log("5 PRESSED");
+  // } else if(event.key === "6") {
+  //   console.log("6 PRESSED");
+  // } else if(event.key === "7") {
+  //   console.log("7 PRESSED");
+  // } else if(event.key === "8") {
+  //   console.log("8 PRESSED");
   }
 }
 
